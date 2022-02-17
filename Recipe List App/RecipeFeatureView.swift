@@ -13,6 +13,7 @@ struct RecipeFeatureView: View {
     // Use environment object so subviews have access to the same data as main view
     @EnvironmentObject var recipeList:RecipeData
     var body: some View {
+        
         VStack(alignment: .leading) {
             Text("Featured Recipes")
                 .font(.title)
@@ -62,6 +63,7 @@ struct RecipeFeatureView: View {
                 Text("Healthy, Hearty")
             }
             .padding(.leading)
+            .padding(.bottom, 25)
         }
     }
 }
