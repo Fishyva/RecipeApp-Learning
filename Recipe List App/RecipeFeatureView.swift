@@ -14,7 +14,7 @@ struct RecipeFeatureView: View {
     @EnvironmentObject var recipeList:RecipeData
     var body: some View {
         
-        VStack(alignment: .leading) {
+        VStack() {
             Text("Featured Recipes")
                 .font(.title)
                 .fontWeight(.bold)
@@ -62,7 +62,7 @@ struct RecipeFeatureView: View {
                     .font(.headline)
                 Text("Healthy, Hearty")
             }
-            .padding(.leading)
+            .padding(.trailing,200)
             .padding(.bottom, 25)
         }
     }
