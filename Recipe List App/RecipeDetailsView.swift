@@ -9,25 +9,43 @@ import SwiftUI
 
 struct RecipeDetailsView: View {
     var recipe:Recipe
+    @State private var selectedServingSize = 2
     var body: some View {
-        
+     
+          
             ScrollView {
                 LazyVStack (alignment: .leading){
                 // MARK: Recipe Image
                 Image(recipe.image)
                     .resizable()
                     .scaledToFill()
+                  
+                    // MARK: Picker
+                    VStack(alignment: .leading) {
+                        Text("Select your servings:")
+                        Picker("",selection: $selectedServingSize ) {
+                            Text("2").tag(2)
+                            Text("4").tag(4)
+                            Text("6").tag(6)
+                            Text("8").tag(8)
+                        }
+                        .pickerStyle(SegmentedPickerStyle())
+                    .frame(width:200)
+                    }
+                    .padding(.leading, 15)
+                    Divider()
                 // MARK: Ingredients
-                VStack(alignment: .leading){
+                    VStack(alignment: .leading, spacing: 10){
                     Text("Ingredients")
                         .font(.headline)
                     ForEach (recipe.ingredients) { item in
-                        Text(item.name)
+                        Text("⁃ " + RecipeData.getPortion(ingredient: item, recipeServings: recipe.servings, targetServings: selectedServingSize) + " " +  item.name.lowercased())
                     }
                 }
                 .padding()
+       Divider()
                 // MARK: directions
-                VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 10) {
                     Text("Directions")
                         .font(.headline)
                     ForEach(0..<recipe.directions.count, id: \.self) { index in
@@ -40,7 +58,8 @@ struct RecipeDetailsView: View {
             .navigationBarTitle(recipe.name)
         }
        // .ignoresSafeArea()
-    }
+        }
+    
 }
 
 struct RecipeDetailsView_Previews: PreviewProvider {

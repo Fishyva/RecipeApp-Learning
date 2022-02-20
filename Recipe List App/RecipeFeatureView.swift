@@ -12,6 +12,8 @@ import SwiftUI
 struct RecipeFeatureView: View {
     // Use environment object so subviews have access to the same data as main view
     @EnvironmentObject var recipeList:RecipeData
+    @State private var isDetailViewShowing = false
+    @State private var tabSelectionIndex = 0
     var body: some View {
         
         VStack() {
@@ -21,25 +23,36 @@ struct RecipeFeatureView: View {
                 .padding(.leading)
                 .padding(.top, 40)
             GeometryReader { geo in
-                TabView{
+                TabView(selection: $tabSelectionIndex){
                     
                     ForEach(0..<recipeList.recipes.count) { index in
                             // only show those that are featured
                         if recipeList.recipes[index].featured == true {
-                            ZStack {
-                                    Rectangle()
-                                    .foregroundColor(.white)
-                                        
-                                VStack(spacing:0) {
-                                    Image(recipeList.recipes[index].image)
-                                        .resizable()
-                                        .aspectRatio(contentMode: .fill)
-                                    //this will maintain the aspect ratio but still fill the space
-                                        .clipped()
-                                    Text(recipeList.recipes[index].name)
-                                        .padding()
+                            // Recipe card button
+                            Button(action: {
+                                // will show recipe detail cheat
+                                self.isDetailViewShowing = true
+                            }, label: {
+                                // MARK: Recipe card
+                                ZStack {
+                                        Rectangle()
+                                        .foregroundColor(.white)
+                                            
+                                    VStack(spacing:0) {
+                                        Image(recipeList.recipes[index].image)
+                                            .resizable()
+                                            .aspectRatio(contentMode: .fill)
+                                        //this will maintain the aspect ratio but still fill the space
+                                            .clipped()
+                                        Text(recipeList.recipes[index].name)
+                                            .padding()
+                                    }
                                 }
-                            }
+                            })
+                                .tag(index)
+                                .sheet(isPresented: $isDetailViewShowing ) {
+                                    RecipeDetailsView(recipe: recipeList.recipes[index])
+                                }
                             .frame(width: geo.size.width - 40, height: geo.size.height - 100)
                             .cornerRadius(30)
                             .shadow(color: .gray, radius: 30)
@@ -57,14 +70,22 @@ struct RecipeFeatureView: View {
             VStack(alignment: .leading) {
                 Text("Preparation Time:")
                     .font(.headline)
-                Text("1 Hour")
+                Text(recipeList.recipes[tabSelectionIndex].prepTime)
                 Text("Highlights:")
                     .font(.headline)
-                Text("Healthy, Hearty")
+                RecipeHighlights(highlights: recipeList.recipes[tabSelectionIndex].highlights)
             }
             .padding(.trailing,200)
             .padding(.bottom, 25)
         }
+        .onAppear(perform: {firstFeatureRecipe()})
+    }
+    func firstFeatureRecipe() {
+        // find index of 1st featured recipe
+        let index = recipeList.recipes.firstIndex { (recipe) -> Bool in
+            recipe.featured
+        }
+        tabSelectionIndex = index ?? 0
     }
 }
 

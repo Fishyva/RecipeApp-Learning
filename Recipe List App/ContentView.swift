@@ -18,7 +18,8 @@ struct ContentView: View {
                     .fontWeight(.bold)
                     .padding(.leading)
                     .padding(.top, 40)
-                    .foregroundColor(.teal)
+                    .foregroundColor(.gray)
+                   
                 
                 ScrollView {
                     LazyVStack(alignment: .leading,spacing: 30) {
@@ -32,20 +33,18 @@ struct ContentView: View {
                                 .frame(width: 50, height: 50, alignment: .center)
                                 .clipped()
                                 .cornerRadius(15)
-                             
-                             VStack(alignment: .leading) {
+                             VStack(alignment: .leading){
                                  Text(r.name)
-                                     .fontWeight(.bold)
-                                 .foregroundColor(.teal)
-                                 Text(r.description)
-                                     .font(.system(size: 10))
+                                         .fontWeight(.bold)
                                      .foregroundColor(.black)
-                                     .padding(.trailing, 15)
+                                 RecipeHighlights(highlights: r.highlights)
+                                     .foregroundColor(.black)
                              }
                             
                                 }
                             
                             }
+                            Divider()
                         }
                     }
                     .padding(.top, 20)
